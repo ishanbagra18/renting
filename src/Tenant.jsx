@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 const Tenant = () => {
   const navigate = useNavigate(); // Initialize navigation
   const rentalListings = [
-    { type: "Car", landlord: "John Doe", address: "123 Main St, NY", phone: "+1234567890", price: "$500/month", isAvailable: true },
-    { type: "House", landlord: "Alice Smith", address: "456 Elm St, CA", phone: "+1987654321", price: "$1200/month", isAvailable: false },
-    { type: "Property", landlord: "Robert Brown", address: "789 Oak St, TX", phone: "+1122334455", price: "$900/month", isAvailable: true },
-    { type: "Apartment", landlord: "Emily Davis", address: "101 Pine St, FL", phone: "+1567890345", price: "$800/month", isAvailable: false },
-    { type: "Office", landlord: "Michael Lee", address: "303 Cedar St, IL", phone: "+1654321098", price: "$1500/month", isAvailable: true },
-    { type: "Shop", landlord: "Sophia Wilson", address: "505 Maple St, WA", phone: "+1987456321", price: "$1000/month", isAvailable: true },
+    { type: "House", landlord: "John Doe", address: "123 Ocean Drive, Mumbai, Maharashtra", phone: "+1234567890", price: "$500/month", isAvailable: true },
+    { type: "Vehicle", landlord: "Alice Smith", address: "456 Auto Lane, Bengaluru, Karnataka", phone: "+1987654321", price: "$1200/month", isAvailable: false },
+    { type: "House", landlord: "Robert Brown", address: "789 Oak St, Chennai, Tamil Nadu", phone: "+1122334455", price: "$900/month", isAvailable: true },
+    { type: "Vehicle", landlord: "Emily Davis", address: "101 Pine St, Delhi, Delhi", phone: "+1567890345", price: "$800/month", isAvailable: false },
+    { type: "House", landlord: "Michael Lee", address: "303 Cedar St, Kolkata, West Bengal", phone: "+1654321098", price: "$1500/month", isAvailable: true },
+    { type: "Vehicle", landlord: "Sophia Wilson", address: "505 Maple St, Hyderabad, Telangana", phone: "+1987456321", price: "$1000/month", isAvailable: true },
   ];
 
   const [selectedRental, setSelectedRental] = useState(null);
@@ -48,13 +48,15 @@ const Tenant = () => {
           onChange={(e) => setFilters({ ...filters, location: e.target.value })}
           className="p-2 border border-gray-300 rounded-md"
         />
-        <input
-          type="text"
-          placeholder="Filter by Type"
+        <select
           value={filters.type}
           onChange={(e) => setFilters({ ...filters, type: e.target.value })}
           className="p-2 border border-gray-300 rounded-md"
-        />
+        >
+          <option value="">Filter by Type</option>
+          <option value="house">House</option>
+          <option value="vehicle">Vehicle</option>
+        </select>
       </div>
 
       {/* Listings Table */}
@@ -103,22 +105,13 @@ const Tenant = () => {
             <p><strong>Address:</strong> {selectedRental.address}</p>
             <p><strong>Phone:</strong> {selectedRental.phone}</p>
             <p><strong>Price:</strong> {selectedRental.price}</p>
-            <p>
-              <strong>Availability:</strong>{" "}
-              {selectedRental.isAvailable ? (
-                <span className="text-green-600">Available</span>
-              ) : (
-                <span className="text-red-600">Not Available</span>
-              )}
-            </p>
-            {selectedRental.isAvailable && (
-              <button
-                className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg w-full hover:bg-green-700"
-                onClick={() => navigate("/contract", { state: { rental: selectedRental } })}
-              >
-                Proceed to Rent
-              </button>
-            )}
+            {/* Only the "Proceed to Rent" button is shown now */}
+            <button
+              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg w-full hover:bg-green-700"
+              onClick={() => navigate("/contract", { state: { rental: selectedRental } })}
+            >
+              Proceed to Rent
+            </button>
             <button
               className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg w-full"
               onClick={() => setSelectedRental(null)}
