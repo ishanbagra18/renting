@@ -42,20 +42,20 @@ const Dashboard = () => {
           {/* Question Section */}
           <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full md:w-1/2 border border-gray-300 text-center md:text-left">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Are you a Tenant or a Landlord?
+            Do you want to rent or lease rent?
             </h2>
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
               <button 
                 className="w-full md:w-auto bg-gradient-to-r from-purple-500 to-pink-400 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-pink-500 transition duration-300 focus:ring-2 focus:ring-pink-400"
                 onClick={() => navigate("/tenant")}
               >
-                Tenant
+                rent
               </button>
               <button 
                 className="w-full md:w-auto bg-gradient-to-r from-pink-500 to-red-400 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-red-500 transition duration-300 focus:ring-2 focus:ring-pink-400"
                 onClick={() => navigate("/landlord")}
               >
-                Landlord
+                lease rent
               </button>
             </div>
           </div>
