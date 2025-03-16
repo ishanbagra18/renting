@@ -11,9 +11,17 @@ const Landlord = () => {
     description: "",
     images: [],
     legalDocs: [],
+    rentPaid: false, // To track if rent is paid
+    review: {
+      timelinessOfRentPayment: 10,
+      propertyCleanliness: 10,
+      ruleCompliance: 10,
+      respectForNeighbors: 10,
+    },
   });
   const [modal, setModal] = useState({ show: false, fileUrl: "" });
   const [selectedPropertyId, setSelectedPropertyId] = useState(null); // Track selected property
+  const [reviewData, setReviewData] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,6 +76,13 @@ const Landlord = () => {
       description: "",
       images: [],
       legalDocs: [],
+      rentPaid: false,
+      review: {
+        timelinessOfRentPayment: 10,
+        propertyCleanliness: 10,
+        ruleCompliance: 10,
+        respectForNeighbors: 10,
+      },
     });
   };
 
@@ -81,6 +96,34 @@ const Landlord = () => {
 
   const togglePropertyDetails = (id) => {
     setSelectedPropertyId((prevId) => (prevId === id ? null : id)); // Toggle between showing and hiding details for one property
+  };
+
+  // Toggle rent paid state
+  const handleRentPaid = (id) => {
+    const property = properties.find((property) => property.id === id);
+    const confirmAction = window.confirm(
+      property.rentPaid ? "Are you sure you want to mark rent as unpaid?" : "Are you sure you want to mark rent as paid?"
+    );
+
+    if (confirmAction) {
+      const updatedProperties = properties.map((property) =>
+        property.id === id ? { ...property, rentPaid: !property.rentPaid } : property
+      );
+      setProperties(updatedProperties);
+    }
+  };
+
+  const handleReviewChange = (e, field) => {
+    const value = e.target.value;
+    setReviewData({ ...reviewData, [field]: value });
+  };
+
+  const handleSubmitReview = (id) => {
+    const updatedProperties = properties.map((property) =>
+      property.id === id ? { ...property, review: reviewData } : property
+    );
+    setProperties(updatedProperties);
+    setReviewData({}); // Reset review data
   };
 
   return (
@@ -147,6 +190,76 @@ const Landlord = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Rent Payment Button */}
+                    <button
+                      onClick={() => handleRentPaid(property.id)}
+                      className={`mt-4 px-4 py-2 font-semibold rounded-lg shadow-md transition ${
+                        property.rentPaid ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"
+                      } text-white`}
+                    >
+                      {property.rentPaid ? "Mark Rent as Unpaid" : "Mark Rent as Paid"}
+                    </button>
+
+                    {/* Review Form */}
+                    {property.rentPaid && (
+                      <div className="mt-4 bg-white p-4 rounded-lg shadow-md">
+                        <h4 className="text-xl text-pink-700 mb-4">Tenant Review</h4>
+                        <div className="flex flex-col gap-4">
+                          <label>
+                            Timeliness of Rent Payment:
+                            <input
+                              type="number"
+                              value={reviewData.timelinessOfRentPayment || property.review.timelinessOfRentPayment}
+                              onChange={(e) => handleReviewChange(e, "timelinessOfRentPayment")}
+                              min="0"
+                              max="10"
+                              className="border p-2 rounded-md w-full"
+                            />
+                          </label>
+                          <label>
+                            Property Cleanliness:
+                            <input
+                              type="number"
+                              value={reviewData.propertyCleanliness || property.review.propertyCleanliness}
+                              onChange={(e) => handleReviewChange(e, "propertyCleanliness")}
+                              min="0"
+                              max="10"
+                              className="border p-2 rounded-md w-full"
+                            />
+                          </label>
+                          <label>
+                            Rule Compliance:
+                            <input
+                              type="number"
+                              value={reviewData.ruleCompliance || property.review.ruleCompliance}
+                              onChange={(e) => handleReviewChange(e, "ruleCompliance")}
+                              min="0"
+                              max="10"
+                              className="border p-2 rounded-md w-full"
+                            />
+                          </label>
+                          <label>
+                            Respect for Neighbors:
+                            <input
+                              type="number"
+                              value={reviewData.respectForNeighbors || property.review.respectForNeighbors}
+                              onChange={(e) => handleReviewChange(e, "respectForNeighbors")}
+                              min="0"
+                              max="10"
+                              className="border p-2 rounded-md w-full"
+                            />
+                          </label>
+
+                          <button
+                            onClick={() => handleSubmitReview(property.id)}
+                            className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
+                          >
+                            Submit Review
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -156,36 +269,146 @@ const Landlord = () => {
 
         {showForm && (
           <form onSubmit={handleAddProperty} className="mt-6 bg-white p-4 rounded-lg shadow-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
-            <h2 className="text-lg sm:text-xl font-bold mb-4 text-pink-700">Add New Property</h2>
-            <div className="flex flex-col gap-4">
-              <input type="text" name="name" placeholder="Property Name" value={newProperty.name} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <input type="text" name="type" placeholder="Type (Vehicle, House)" value={newProperty.type} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <input type="text" name="location.street" placeholder="Street" value={newProperty.location.street} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <input type="text" name="location.city" placeholder="City" value={newProperty.location.city} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <input type="text" name="location.state" placeholder="State" value={newProperty.location.state} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <input type="text" name="location.pincode" placeholder="Pincode" value={newProperty.location.pincode} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <input type="text" name="price" placeholder="Price (e.g., $1000/month)" value={newProperty.price} onChange={handleChange} className="border p-2 rounded-md w-full" />
-              <textarea name="description" placeholder="Property Description" value={newProperty.description} onChange={handleChange} className="border p-2 rounded-md w-full" minLength="15" required></textarea>
-              <input type="file" multiple accept="image/*" onChange={(e) => handleFileUpload(e, "images")} className="border p-2 rounded-md w-full" />
-              <input type="file" multiple accept="application/pdf, image/jpeg, image/jpg" onChange={(e) => handleFileUpload(e, "legalDocs")} className="border p-2 rounded-md w-full" />
-            </div>
-            <button type="submit" className="mt-4 px-4 py-2 bg-pink-600 text-white font-semibold rounded-lg shadow-md hover:bg-pink-700 transition w-full">
+            <h2 className="text-2xl sm:text-3xl font-bold text-pink-700 mb-4">Add New Property</h2>
+            {/* Form Fields */}
+            <label className="block mb-2">
+              Property Name:
+              <input
+                type="text"
+                name="name"
+                value={newProperty.name}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Property Type:
+              <input
+                type="text"
+                name="type"
+                value={newProperty.type}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Street:
+              <input
+                type="text"
+                name="location.street"
+                value={newProperty.location.street}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              City:
+              <input
+                type="text"
+                name="location.city"
+                value={newProperty.location.city}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              State:
+              <input
+                type="text"
+                name="location.state"
+                value={newProperty.location.state}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Pincode:
+              <input
+                type="text"
+                name="location.pincode"
+                value={newProperty.location.pincode}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Price:
+              <input
+                type="number"
+                name="price"
+                value={newProperty.price}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Description:
+              <textarea
+                name="description"
+                value={newProperty.description}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border rounded-md"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Property Images (at least 3):
+              <input
+                type="file"
+                multiple
+                onChange={(e) => handleFileUpload(e, "images")}
+                className="w-full p-2 border rounded-md"
+                accept="image/*"
+              />
+            </label>
+
+            <label className="block mb-2">
+              Legal Documents (only 1):
+              <input
+                type="file"
+                onChange={(e) => handleFileUpload(e, "legalDocs")}
+                className="w-full p-2 border rounded-md"
+                accept=".pdf,.doc,.docx"
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
+            >
               Add Property
             </button>
           </form>
         )}
       </div>
 
-      {/* Modal for Image or Document Preview */}
       {modal.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg max-w-lg w-full">
-            {modal.fileUrl.endsWith(".pdf") ? (
-              <iframe src={modal.fileUrl} width="100%" height="500px" title="Document Preview" />
-            ) : (
-              <img src={modal.fileUrl} alt="Property" className="w-full h-auto rounded-lg" />
-            )}
-            <button onClick={closeModal} className="mt-4 px-4 py-2 bg-pink-600 text-white font-semibold rounded-lg shadow-md hover:bg-pink-700 transition">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <img
+              src={modal.fileUrl}
+              alt="Modal content"
+              className="max-w-full max-h-96 object-contain"
+            />
+            <button
+              onClick={closeModal}
+              className="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition"
+            >
               Close
             </button>
           </div>

@@ -7,6 +7,8 @@ import Dashboard from "./Dashboard";
 import Tenant from "./Tenant";
 import Landload from "./Landload";
 import Contract from "./components/Contract";
+import Proceedtopay from "./components/Proceedtopay";
+import RateContract from "./components/RateContract";
 
 const App = () => {
   return (
@@ -19,6 +21,9 @@ const App = () => {
         <Route path="/tenant" element={<Tenant />} />
         <Route path="/landlord" element={<Landload />} />
         <Route path="/contract" element={<Contract />} />
+        <Route path="/Proceedtopay" element={<Proceedtopay />} />
+        <Route path="/rate-contract" element={<RateContract />} />
+
       </Routes>
     </Router>
   );

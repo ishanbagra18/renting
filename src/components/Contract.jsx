@@ -41,7 +41,7 @@ const Contract = () => {
   };
 
   const proceedToPayment = () => {
-    navigate("/payment", { state: { rental } });
+    navigate("/Proceedtopay", { state: { rental } });
   };
 
   return (

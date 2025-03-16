@@ -125,4 +125,4 @@ const Tenant = () => {
   );
 };
 
-export default Tenant;
+export default Tenant;  
