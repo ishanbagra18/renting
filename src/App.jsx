@@ -6,6 +6,7 @@ import UserProfileForm from "./UserProfileForm";
 import Dashboard from "./Dashboard"; 
 import Tenant from "./Tenant";
 import Landload from "./Landload";
+import Contract from "./components/Contract";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tenant" element={<Tenant />} />
         <Route path="/landlord" element={<Landload />} />
+        <Route path="/contract" element={<Contract />} />
       </Routes>
     </Router>
   );
